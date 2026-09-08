@@ -10,6 +10,7 @@ import MarketplacePage from './pages/Marketplace/MarketplacePage';
 import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/RegisterPage';
 import DashboardPage from './pages/Dashboard/DashboardPage';
+import BookingPage from './pages/Booking/BookingPage';
 import NotFoundPage from './pages/NotFound/NotFoundPage';
 import './App.css';
 
@@ -42,6 +43,7 @@ function AppLayout({ theme, onToggleTheme, onShowToast }) {
           <Route path="/login" element={<LoginPage onShowToast={onShowToast} />} />
           <Route path="/register" element={<RegisterPage onShowToast={onShowToast} />} />
           <Route path="/dashboard" element={<DashboardPage onShowToast={onShowToast} />} />
+          <Route path="/booking/:slug" element={<BookingPage />} />
           <Route path="/talent/:slug" element={<ProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

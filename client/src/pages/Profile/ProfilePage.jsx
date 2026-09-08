@@ -37,9 +37,9 @@ export default function ProfilePage() {
               <p className="profile-title">{profile.title}</p>
               <p className="profile-location">📍 {profile.location}</p>
               <div className="profile-actions">
-                <Button>Contact</Button>
-                <Button variant="secondary">Request service</Button>
-                <Button variant="ghost">Book now</Button>
+                <Button to={`/booking/${profile.slug}`}>Contact</Button>
+                <Button variant="secondary" to={`/booking/${profile.slug}`}>Request service</Button>
+                <Button variant="ghost" to={`/booking/${profile.slug}`}>Book now</Button>
               </div>
             </div>
           </div>
