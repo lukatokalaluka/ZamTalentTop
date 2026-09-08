@@ -39,9 +39,9 @@ function AppLayout({ theme, onToggleTheme, onShowToast }) {
           <Route path="/discover" element={<DiscoverPage onShowToast={onShowToast} />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/marketplace" element={<MarketplacePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/login" element={<LoginPage onShowToast={onShowToast} />} />
+          <Route path="/register" element={<RegisterPage onShowToast={onShowToast} />} />
+          <Route path="/dashboard" element={<DashboardPage onShowToast={onShowToast} />} />
           <Route path="/talent/:slug" element={<ProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
