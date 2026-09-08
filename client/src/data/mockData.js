@@ -164,11 +164,71 @@ export const featuredTalent = [
 ];
 
 export const discoverTalent = [
-  { id: 1, slug: 'john-doe', name: 'John Doe', title: 'Photographer & Visual Storyteller', location: 'Lusaka', category: 'Photography', rating: 4.9, reviews: 128, price: 'K3,500', verified: true, image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1600&q=80', description: 'Cinematic event and brand photography for meaningful stories and product launches.', skills: ['Portraits', 'Brand shoots', 'Retouching'], availability: 'Available this week', featured: true },
-  { id: 2, slug: 'mwanza-sikota', name: 'Mwanza Sikota', title: 'Music Producer', location: 'Copperbelt', category: 'Music Production', rating: 4.8, reviews: 96, price: 'K5,200', verified: true, image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1600&q=80', description: 'Afrobeats and commercial production for artists, brands and radio-ready tracks.', skills: ['Beat making', 'Mixing', 'Mastering'], availability: 'Booking for Q4 projects', featured: true },
-  { id: 3, slug: 'anita-lungu', name: 'Anita Lungu', title: 'Graphic Designer', location: 'Kitwe', category: 'Graphic Design', rating: 5.0, reviews: 142, price: 'K2,800', verified: true, image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80', description: 'Brand identities and social visuals built to convert attention into trust.', skills: ['Branding', 'Packaging', 'Social design'], availability: 'Open for retainer clients', featured: true },
-  { id: 4, slug: 'chileshe-sakala', name: 'Chileshe Sakala', title: 'Web Developer', location: 'Lusaka', category: 'Web Development', rating: 4.9, reviews: 118, price: 'K4,600', verified: true, image: 'https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1600&q=80', description: 'Custom websites, landing pages and product dashboards for growing businesses.', skills: ['React', 'WordPress', 'SEO'], availability: 'Available for new builds', featured: true },
-  { id: 5, slug: 'bwalya-mwape', name: 'Bwalya Mwape', title: 'Event Planner', location: 'Livingstone', category: 'Event Planning', rating: 4.7, reviews: 84, price: 'K6,800', verified: false, image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1600&q=80', description: 'Private events and corporate experiences with smooth logistics and beautiful flow.', skills: ['Vendor management', 'Planning', 'Productions'], availability: 'Weekend events available', featured: true },
+  { id: 1, slug: 'john-doe', name: 'John Doe', title: 'Photographer & Visual Storyteller', location: 'Lusaka', category: 'Photography', rating: 4.9, reviews: 128, price: 'K3,500', verified: true, image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1600&q=80', description: 'Cinematic event and brand photography for meaningful stories and product launches.', skills: ['Portraits', 'Brand shoots', 'Retouching'], availability: 'Available this week', featured: true, bio: 'I capture authentic visual stories for couples, brands and growing businesses across Zambia. My work blends storytelling, clean composition and natural light to make every moment feel timeless.', services: [
+    { name: 'Brand Shoot', price: 'K2,600' },
+    { name: 'Wedding Coverage', price: 'K4,800' },
+    { name: 'Portrait Sessions', price: 'K1,900' }
+  ], pricing: 'Starting from K1,900', portfolioImages: [
+    'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80'
+  ], socialLinks: { instagram: '@johndoephoto', whatsapp: '+260 977 123 456', email: 'hello@johndoephoto.com' }, testimonials: [
+    { author: 'Amanda H.', text: 'Professional, quick to respond and the final images looked incredible.' },
+    { author: 'Daniel K.', text: 'Beautiful work and excellent communication from start to finish.' }
+  ], stats: { projects: '240+', response: '1h', satisfaction: '98%' } },
+  { id: 2, slug: 'mwanza-sikota', name: 'Mwanza Sikota', title: 'Music Producer', location: 'Copperbelt', category: 'Music Production', rating: 4.8, reviews: 96, price: 'K5,200', verified: true, image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1600&q=80', description: 'Afrobeats and commercial production for artists, brands and radio-ready tracks.', skills: ['Beat making', 'Mixing', 'Mastering'], availability: 'Booking for Q4 projects', featured: true, bio: 'I build polished, radio-ready soundscapes for musicians and brands that want an authentic Zambian edge with international quality.', services: [
+    { name: 'Beat Production', price: 'K3,200' },
+    { name: 'Mix & Master', price: 'K2,600' },
+    { name: 'Song Arrangement', price: 'K4,000' }
+  ], pricing: 'Starting from K2,600', portfolioImages: [
+    'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80'
+  ], socialLinks: { instagram: '@mwanzaaudio', whatsapp: '+260 964 778 920', email: 'studio@mwanzaaudio.com' }, testimonials: [
+    { author: 'Chipo M.', text: 'My single sounded amazing and the production process was organized.' },
+    { author: 'Nalu B.', text: 'Very talented producer with a sharp ear for mood and rhythm.' }
+  ], stats: { projects: '180+', response: '2h', satisfaction: '96%' } },
+  { id: 3, slug: 'anita-lungu', name: 'Anita Lungu', title: 'Graphic Designer', location: 'Kitwe', category: 'Graphic Design', rating: 5.0, reviews: 142, price: 'K2,800', verified: true, image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80', description: 'Brand identities and social visuals built to convert attention into trust.', skills: ['Branding', 'Packaging', 'Social design'], availability: 'Open for retainer clients', featured: true, bio: 'I create clean, memorable visuals for businesses that want to feel modern and memorable from the first impression onward.', services: [
+    { name: 'Brand Identity Kit', price: 'K3,600' },
+    { name: 'Social Media Design', price: 'K1,500' },
+    { name: 'Packaging Design', price: 'K2,200' }
+  ], pricing: 'Starting from K1,500', portfolioImages: [
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1522543558187-768b6df7c25f?auto=format&fit=crop&w=900&q=80'
+  ], socialLinks: { instagram: '@anitalungu.design', whatsapp: '+260 955 442 110', email: 'hello@anitalungu.design' }, testimonials: [
+    { author: 'Moses S.', text: 'Our branding finally feels premium and cohesive.' },
+    { author: 'Lilian T.', text: 'Very creative and highly responsive for quick campaign work.' }
+  ], stats: { projects: '310+', response: '45m', satisfaction: '99%' } },
+  { id: 4, slug: 'chileshe-sakala', name: 'Chileshe Sakala', title: 'Web Developer', location: 'Lusaka', category: 'Web Development', rating: 4.9, reviews: 118, price: 'K4,600', verified: true, image: 'https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1600&q=80', description: 'Custom websites, landing pages and product dashboards for growing businesses.', skills: ['React', 'WordPress', 'SEO'], availability: 'Available for new builds', featured: true, bio: 'I design and build digital experiences that help businesses turn attention into leads, trust and long-term customer value.', services: [
+    { name: 'Business Website', price: 'K6,500' },
+    { name: 'Landing Page Design', price: 'K3,000' },
+    { name: 'Maintenance Retainer', price: 'K1,800' }
+  ], pricing: 'Starting from K3,000', portfolioImages: [
+    'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1522543558187-768b6df7c25f?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=80'
+  ], socialLinks: { instagram: '@chileshecodes', whatsapp: '+260 966 550 112', email: 'projects@chileshecodes.dev' }, testimonials: [
+    { author: 'Mumba R.', text: 'The site loads quickly and feels premium. We saw better inquiries within weeks.' },
+    { author: 'Nawa K.', text: 'Very skilled, organized and easy to work with.' }
+  ], stats: { projects: '220+', response: '30m', satisfaction: '97%' } },
+  { id: 5, slug: 'bwalya-mwape', name: 'Bwalya Mwape', title: 'Event Planner', location: 'Livingstone', category: 'Event Planning', rating: 4.7, reviews: 84, price: 'K6,800', verified: false, image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1600&q=80', description: 'Private events and corporate experiences with smooth logistics and beautiful flow.', skills: ['Vendor management', 'Planning', 'Productions'], availability: 'Weekend events available', featured: true, bio: 'I design memorable experiences that remove the stress from event planning and give guests a smooth, polished experience.', services: [
+    { name: 'Wedding Planning', price: 'K8,500' },
+    { name: 'Corporate Events', price: 'K6,200' },
+    { name: 'Venue Coordination', price: 'K3,800' }
+  ], pricing: 'Starting from K3,800', portfolioImages: [
+    'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80'
+  ], socialLinks: { instagram: '@bwalyaevents', whatsapp: '+260 977 991 224', email: 'hello@bwalyaevents.com' }, testimonials: [
+    { author: 'Rachel P.', text: 'Everything ran smoothly and the event felt premium from beginning to end.' },
+    { author: 'Yvonne F.', text: 'Highly organized and thoughtful in how every detail was managed.' }
+  ], stats: { projects: '150+', response: '2h', satisfaction: '95%' } },
   { id: 6, slug: 'mulenga-kaleb', name: 'Mulenga Kaleb', title: 'Video Editor', location: 'Ndola', category: 'Video Production', rating: 4.6, reviews: 90, price: 'K3,200', verified: true, image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1522543558187-768b6df7c25f?auto=format&fit=crop&w=1600&q=80', description: 'Short-form content, promos and storytelling edits that keep audiences engaged.', skills: ['Avid', 'Premiere Pro', 'Transitions'], availability: 'Available this month', featured: false },
   { id: 7, slug: 'tina-mapulanga', name: 'Tina Mapulanga', title: 'Makeup Artist', location: 'Mazabuka', category: 'Beauty', rating: 4.9, reviews: 112, price: 'K2,900', verified: true, image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1600&q=80', description: 'Bridal and editorial styling with polished, camera-ready finishes.', skills: ['Bridal glam', 'Makeup artistry', 'Skin prep'], availability: 'Available for weekends', featured: false },
   { id: 8, slug: 'nathan-mushib', name: 'Nathan Mushib', title: 'Electrician', location: 'Kabwe', category: 'Skilled Trades', rating: 4.8, reviews: 87, price: 'K1,800', verified: true, image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80', cover: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1600&q=80', description: 'Residential electrical work, installs and repairs with quick response times.', skills: ['Wiring', 'Repairs', 'Maintenance'], availability: 'Open this week', featured: false },
