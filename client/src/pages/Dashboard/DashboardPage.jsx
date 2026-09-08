@@ -20,6 +20,13 @@ const bookings = [
   { title: 'Studio retouching package', date: 'Mon, 17 Sep', time: '9:00 AM', amount: 'K1,900' },
 ];
 
+const trustSignals = [
+  { title: 'Identity verification', status: 'Verified', tone: 'good' },
+  { title: 'Payment protection', status: 'Enabled', tone: 'good' },
+  { title: 'Client review score', status: '4.9/5', tone: 'good' },
+  { title: 'Payout schedule', status: 'Weekly', tone: 'neutral' },
+];
+
 export default function DashboardPage() {
   return (
     <div className="page-shell">
@@ -83,6 +90,31 @@ export default function DashboardPage() {
             ))}
           </div>
         </section>
+
+        <div className="dashboard-panels dashboard-panels--bottom">
+          <section className="info-panel">
+            <h2>Trust & safety</h2>
+            <div className="trust-list">
+              {trustSignals.map((signal) => (
+                <div key={signal.title} className="trust-item">
+                  <div>
+                    <strong>{signal.title}</strong>
+                  </div>
+                  <span className={`trust-status trust-status--${signal.tone}`}>{signal.status}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="info-panel">
+            <h2>Seller essentials</h2>
+            <ul className="detail-list">
+              <li>Completed 12 client projects this quarter</li>
+              <li>Average response time: under 1 hour</li>
+              <li>Profile conversion rate is trending upward</li>
+            </ul>
+          </section>
+        </div>
       </div>
     </div>
   );
