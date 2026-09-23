@@ -1728,6 +1728,17 @@
   gap: 12px;
 }
 
+.dashboard-editor {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.dashboard-editor h2,
+.dashboard-editor p {
+  margin: 0;
+}
+
 .dashboard-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 18px;

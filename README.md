@@ -20,6 +20,10 @@ The frontend is a Supabase web application. Supabase Auth handles identity and t
 Supabase database handles profiles, bookings, and marketplace products. Configure
 `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in `client/.env`.
 
+Run `supabase/schema.sql` in the Supabase SQL editor before using authentication,
+profiles, or bookings. The script creates `public.profiles` and `public.bookings`
+with the policies required by the client dashboard and public directory.
+
 The public tables used by the client are `profiles`, `bookings`, and
 `marketplace_products`. Enable Row Level Security and define policies before
 deploying. The browser must only receive the publishable key; never expose a
