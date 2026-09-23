@@ -22,7 +22,9 @@ Supabase database handles profiles, bookings, and marketplace products. Configur
 
 Run `supabase/schema.sql` in the Supabase SQL editor before using authentication,
 profiles, or bookings. The script creates `public.profiles` and `public.bookings`
-with the policies required by the client dashboard and public directory.
+with the policies required by the client dashboard and public directory. It also
+creates the public `avatars` Storage bucket; keep the bucket policies from the
+script so users can only upload inside their own user folder.
 
 The public tables used by the client are `profiles`, `bookings`, and
 `marketplace_products`. Enable Row Level Security and define policies before

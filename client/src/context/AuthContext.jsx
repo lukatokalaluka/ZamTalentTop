@@ -49,7 +49,12 @@ export function AuthProvider({ children }) {
       const metadata = session.user.user_metadata || {};
       const { profile: createdProfile } = await saveProfile(session.user.id, {
         name: metadata.name || session.user.email?.split('@')[0] || 'New professional',
+        legal_name: metadata.legal_name || metadata.name || session.user.email?.split('@')[0] || 'New professional',
         display_name: metadata.name || session.user.email?.split('@')[0] || 'New professional',
+        phone: metadata.phone || '',
+        artist_name: metadata.artist_name || '',
+        organisation_name: metadata.organisation_name || '',
+        display_preference: metadata.display_preference || 'legal_name',
         category: metadata.category || 'Professional',
         slug: `${(metadata.name || session.user.email?.split('@')[0] || 'professional')
           .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${session.user.id.slice(0, 6)}`,

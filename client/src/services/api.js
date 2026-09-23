@@ -4,30 +4,42 @@ function throwOnError(error) {
   if (error) throw new Error(error.message || 'The request could not be completed.');
 }
 
+const publicProfileColumns = 'id,user_id,slug,name,display_name,title,category,bio,location,province,town,latitude,longitude,image_url,avatar_url,cover_url,skills,services,social_links,status,availability,price,rating,reviews,created_at,updated_at';
+
 function normalizeProfile(profile) {
   if (!profile) return null;
 
+  const legalName = profile.legal_name || profile.name || profile.display_name || 'Unnamed professional';
+  const artistName = profile.artist_name || '';
+  const organisationName = profile.organisation_name || '';
+  const preferredName = profile.display_preference === 'artist_name' ? artistName
+    : profile.display_preference === 'organisation_name' ? organisationName
+      : profile.display_preference === 'both' ? [legalName, artistName || organisationName].filter(Boolean).join(' · ')
+        : legalName;
+
   return {
     ...profile,
-    name: profile.name || profile.display_name || 'Unnamed professional',
-    display_name: profile.display_name || profile.name || 'Unnamed professional',
+    name: preferredName,
+    legal_name: legalName,
+    display_name: preferredName,
     image: profile.image || profile.image_url || '',
     image_url: profile.image_url || profile.image || '',
     cover: profile.cover || profile.cover_url || '',
     skills: profile.skills || [],
     services: profile.services || [],
     socialLinks: profile.social_links || profile.socialLinks || {},
+    avatar_url: profile.avatar_url || profile.image_url || '',
   };
 }
 
 export async function getProfiles() {
-  const { data, error } = await supabase.from('profiles').select('*').eq('status', 'ACTIVE');
+  const { data, error } = await supabase.from('profiles').select(publicProfileColumns).eq('status', 'ACTIVE');
   throwOnError(error);
   return { profiles: (data || []).map(normalizeProfile) };
 }
 
 export async function getProfile(slug) {
-  const { data, error } = await supabase.from('profiles').select('*').eq('slug', slug).maybeSingle();
+  const { data, error } = await supabase.from('profiles').select(publicProfileColumns).eq('slug', slug).maybeSingle();
   throwOnError(error);
   if (!data) throw new Error('Profile was not found.');
   return { profile: normalizeProfile(data) };
@@ -51,6 +63,18 @@ export async function saveProfile(userId, profile) {
     .single();
   throwOnError(error);
   return { profile: normalizeProfile(data) };
+}
+
+export async function uploadAvatar(userId, file) {
+  const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  const path = `${userId}/avatar-${Date.now()}.${extension}`;
+  const { error: uploadError } = await supabase.storage.from('avatars').upload(path, file, {
+    cacheControl: '3600',
+    upsert: true,
+  });
+  throwOnError(uploadError);
+  const { data } = supabase.storage.from('avatars').getPublicUrl(path);
+  return data.publicUrl;
 }
 
 export async function getUserBookings(userId) {

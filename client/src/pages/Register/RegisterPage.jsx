@@ -6,8 +6,12 @@ import { supabase } from '../../lib/supabase';
 export default function RegisterPage({ onShowToast }) {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    name: '',
+    legalName: '',
     email: '',
+    phone: '',
+    artistName: '',
+    organisationName: '',
+    displayPreference: 'legal_name',
     category: 'Photographer',
     password: '',
   });
@@ -28,7 +32,16 @@ export default function RegisterPage({ onShowToast }) {
       password: form.password,
       options: {
         emailRedirectTo: `${window.location.origin}/dashboard`,
-        data: { name: form.name, category: form.category, role: 'SELLER' },
+        data: {
+          name: form.legalName,
+          legal_name: form.legalName,
+          phone: form.phone,
+          artist_name: form.artistName,
+          organisation_name: form.organisationName,
+          display_preference: form.displayPreference,
+          category: form.category,
+          role: 'SELLER',
+        },
       },
     });
     setSubmitting(false);
@@ -60,12 +73,33 @@ export default function RegisterPage({ onShowToast }) {
             <span>Full name</span>
             <input
               type="text"
-              name="name"
-              value={form.name}
+                name="legalName"
+                value={form.legalName}
               onChange={handleChange}
               placeholder="Your full name"
               required
             />
+          </label>
+          <label>
+            <span>Phone number</span>
+            <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+260 97 123 4567" pattern="\+?[0-9 ()-]{7,20}" required />
+          </label>
+          <label>
+            <span>Artist name (optional)</span>
+            <input type="text" name="artistName" value={form.artistName} onChange={handleChange} placeholder="Your public artist name" />
+          </label>
+          <label>
+            <span>Brand or organisation (optional)</span>
+            <input type="text" name="organisationName" value={form.organisationName} onChange={handleChange} placeholder="Your company or organisation" />
+          </label>
+          <label>
+            <span>Show my profile as</span>
+            <select name="displayPreference" value={form.displayPreference} onChange={handleChange}>
+              <option value="legal_name">Full legal name</option>
+              <option value="artist_name">Artist name</option>
+              <option value="organisation_name">Brand or organisation</option>
+              <option value="both">Legal name and artist/brand name</option>
+            </select>
           </label>
           <label>
             <span>Email</span>

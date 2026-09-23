@@ -24,6 +24,22 @@ create table if not exists public.profiles (
   updated_at timestamptz not null default now()
 );
 
+alter table public.profiles add column if not exists legal_name text not null default '';
+alter table public.profiles add column if not exists phone text not null default '';
+alter table public.profiles add column if not exists artist_name text not null default '';
+alter table public.profiles add column if not exists organisation_name text not null default '';
+alter table public.profiles add column if not exists display_preference text not null default 'legal_name';
+alter table public.profiles add column if not exists province text not null default '';
+alter table public.profiles add column if not exists town text not null default '';
+alter table public.profiles add column if not exists latitude double precision;
+alter table public.profiles add column if not exists longitude double precision;
+alter table public.profiles add column if not exists avatar_url text not null default '';
+
+update public.profiles
+set legal_name = coalesce(nullif(legal_name, ''), name),
+    display_name = coalesce(nullif(display_name, ''), name)
+where legal_name = '' or display_name = '';
+
 create table if not exists public.bookings (
   id uuid primary key default gen_random_uuid(),
   buyer_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
@@ -60,3 +76,22 @@ create policy "Authenticated users create bookings" on public.bookings
 grant select on public.profiles to anon, authenticated;
 grant insert, update, delete on public.profiles to authenticated;
 grant select, insert on public.bookings to authenticated;
+
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "Public avatar files are readable" on storage.objects;
+create policy "Public avatar files are readable" on storage.objects
+  for select using (bucket_id = 'avatars');
+
+drop policy if exists "Users upload their avatar" on storage.objects;
+create policy "Users upload their avatar" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+drop policy if exists "Users update their avatar" on storage.objects;
+create policy "Users update their avatar" on storage.objects
+  for update to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text)
+  with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
