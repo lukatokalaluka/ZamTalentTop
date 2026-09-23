@@ -26,7 +26,10 @@ export default function RegisterPage({ onShowToast }) {
     const { error: authError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
-      options: { data: { name: form.name, category: form.category, role: 'SELLER' } },
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`,
+        data: { name: form.name, category: form.category, role: 'SELLER' },
+      },
     });
     setSubmitting(false);
     if (authError) {
