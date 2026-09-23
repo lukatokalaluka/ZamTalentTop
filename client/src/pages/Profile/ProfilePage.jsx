@@ -264,7 +264,8 @@ export default function ProfilePage() {
               <section className="info-panel">
                 <h2>Contact</h2>
                 <ul className="detail-list">
-                  <li>WhatsApp: {profile.socialLinks?.whatsapp || '+260 977 123 456'}</li>
+                  <li>WhatsApp: {profile.socialLinks?.whatsapp || '+260 763 464 067'}</li>
+                  <li>Call: {profile.socialLinks?.phone || '+260 972 941 849'}</li>
                   <li>Email: {profile.socialLinks?.email || `hello@${profile.slug}.studio`}</li>
                   <li>Instagram: {profile.socialLinks?.instagram || `@${profile.slug}`}</li>
                 </ul>

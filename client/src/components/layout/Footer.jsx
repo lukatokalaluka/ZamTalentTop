@@ -36,7 +36,8 @@ export default function Footer() {
           <h3>Contact</h3>
           <ul className="footer-list">
             <li><a href="mailto:hello@zamtalenttop.com">hello@zamtalenttop.com</a></li>
-            <li><a href="tel:+260966000000">+260 966 000 000</a></li>
+            <li><a href="https://wa.me/260763464067" target="_blank" rel="noreferrer">WhatsApp: +260 763 464 067</a></li>
+            <li><a href="tel:+260972941849">Call: +260 972 941 849</a></li>
             <li><span>Lusaka, Zambia</span></li>
           </ul>
         </div>
