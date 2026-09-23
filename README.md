@@ -2,8 +2,6 @@
 
 Zam Talent Top is a Zambian talent discovery and professional showcase platform.
 
-## Phase 1: Frontend foundation and homepage
-
 ### Run locally
 
 1. Install dependencies:
@@ -14,15 +12,15 @@ Zam Talent Top is a Zambian talent discovery and professional showcase platform.
 
 ## Project structure
 
-- `client/` — React + Vite frontend
-- `server/` — backend structure reserved for later phases
-- `database/` — migrations and seed scripts reserved for later phases
+- `client/` — React + Vite Supabase frontend
 
 ## Current scope
 
-This phase includes:
-- production-style design system
-- responsive homepage
-- category and talent sections
-- route scaffolding for future pages
-- starter architecture for discover, profile, dashboard, and marketplace flows
+The frontend is a Supabase web application. Supabase Auth handles identity and the
+Supabase database handles profiles, bookings, and marketplace products. Configure
+`VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in `client/.env`.
+
+The public tables used by the client are `profiles`, `bookings`, and
+`marketplace_products`. Enable Row Level Security and define policies before
+deploying. The browser must only receive the publishable key; never expose a
+Supabase secret/service-role key in `client/.env`.

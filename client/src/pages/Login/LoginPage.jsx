@@ -1,20 +1,32 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/common/Button';
+import { supabase } from '../../lib/supabase';
 
 export default function LoginPage({ onShowToast }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setError('');
+    setSubmitting(true);
+    const { error: authError } = await supabase.auth.signInWithPassword(form);
+    setSubmitting(false);
+    if (authError) {
+      setError(authError.message);
+      return;
+    }
     onShowToast?.('Welcome back. Redirecting to your dashboard.');
-    navigate('/dashboard');
+    navigate(location.state?.from?.pathname || '/dashboard', { replace: true });
   };
 
   return (
@@ -61,12 +73,13 @@ export default function LoginPage({ onShowToast }) {
               <input type="checkbox" defaultChecked />
               <span>Remember me</span>
             </label>
-            <a href="#" className="link-text">Forgot password?</a>
+            <button type="button" className="link-text link-button" onClick={() => onShowToast?.('Password reset is coming soon.')}>Forgot password?</button>
           </div>
 
-          <Button type="submit" className="full-width">Login</Button>
+          {error ? <p role="alert" className="form-error">{error}</p> : null}
+          <Button type="submit" className="full-width" disabled={submitting}>{submitting ? 'Logging in...' : 'Login'}</Button>
           <p className="muted-copy">
-            No account yet? <a href="/register" className="link-text">Create one</a>
+            No account yet? <Link to="/register" className="link-text">Create one</Link>
           </p>
         </form>
       </div>

@@ -1,27 +1,32 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Button from '../../components/common/Button';
-import { discoverTalent } from '../../data/mockData';
+import { createBooking, getProfile } from '../../services/api';
 
-export default function BookingPage() {
+export default function BookingPage({ onShowToast }) {
   const { slug } = useParams();
-  const talent = useMemo(
-    () => discoverTalent.find((person) => person.slug === slug) || discoverTalent[0],
-    [slug]
-  );
-
-  const initialService = talent.services?.[0]?.name || 'Custom project';
-  const [selectedService, setSelectedService] = useState(initialService);
-  const [projectName, setProjectName] = useState(`${talent.name} project`);
-  const [budget, setBudget] = useState(talent.price || 'K3,500');
+  const [remoteTalent, setRemoteTalent] = useState(null);
+  const [error, setError] = useState('');
+  const [selectedService, setSelectedService] = useState('');
+  const [projectName, setProjectName] = useState('');
+  const [budget, setBudget] = useState('');
   const [projectDate, setProjectDate] = useState('');
   const [notes, setNotes] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  useEffect(() => { getProfile(slug).then(({ profile }) => setRemoteTalent(profile)).catch((requestError) => setError(requestError.message)); }, [slug]);
+  const talent = remoteTalent;
+
+  useEffect(() => {
+    if (!talent) return;
+    setSelectedService(talent.services?.[0]?.name || 'Custom project');
+    setProjectName(`${talent.name} project`);
+    setBudget(talent.price || '');
+  }, [talent]);
 
   const summary = useMemo(() => {
-    const service = talent.services?.find((item) => item.name === selectedService) || {
+    const service = talent?.services?.find((item) => item.name === selectedService) || {
       name: selectedService,
-      price: talent.price,
+      price: talent?.price || '',
     };
 
     return {
@@ -30,8 +35,18 @@ export default function BookingPage() {
     };
   }, [selectedService, talent]);
 
-  const handleSubmit = (event) => {
+  if (!talent) return <div className="page-shell"><div className="container empty-state"><p>{error || 'Loading profile...'}</p></div></div>;
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setError('');
+    try {
+      await createBooking({ seller_id: talent.user_id, service_name: selectedService, date: projectDate, time: '09:00', duration_hours: 1, total_minor: Number.parseInt(budget.replace(/\D/g, ''), 10) * 100 });
+      onShowToast?.('Your booking request was sent.');
+    } catch (requestError) {
+      setError(requestError.message);
+      return;
+    }
     setIsSubmitted(true);
   };
 
@@ -117,6 +132,7 @@ export default function BookingPage() {
                 Your request has been prepared for {talent.name}. They will reply within 1–2 business hours.
               </p>
             ) : null}
+            {error ? <p role="alert" className="form-error">{error}</p> : null}
           </form>
 
           <aside className="booking-summary info-panel">

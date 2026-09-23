@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { categories, discoverTalent, provinceOptions } from '../../data/mockData';
+import { getProfiles } from '../../services/api';
 
 const pageSize = 6;
 
@@ -12,8 +12,19 @@ export default function DiscoverPage({ onShowToast }) {
   const [sortBy, setSortBy] = useState('top-rated');
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const categoryOptions = ['All categories', ...categories.map((category) => category.name)];
+  useEffect(() => {
+    getProfiles()
+      .then(({ profiles: nextProfiles }) => setProfiles(nextProfiles))
+      .catch((requestError) => setError(requestError.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const categoryOptions = ['All categories', ...new Set(profiles.map((profile) => profile.category).filter(Boolean))];
+  const provinceOptions = [...new Set(profiles.map((profile) => profile.location).filter(Boolean))];
 
   const handleSearchChange = (value) => {
     setQuery(value);
@@ -43,13 +54,13 @@ export default function DiscoverPage({ onShowToast }) {
   const filteredTalent = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    const results = discoverTalent.filter((talent) => {
+    const results = profiles.filter((talent) => {
       const matchesQuery =
         !normalizedQuery ||
         talent.name.toLowerCase().includes(normalizedQuery) ||
         talent.title.toLowerCase().includes(normalizedQuery) ||
         talent.category.toLowerCase().includes(normalizedQuery) ||
-        talent.skills.some((skill) => skill.toLowerCase().includes(normalizedQuery));
+        (talent.skills || []).some((skill) => skill.toLowerCase().includes(normalizedQuery));
 
       const matchesCategory =
         selectedCategory === 'All categories' || talent.category === selectedCategory;
@@ -60,7 +71,7 @@ export default function DiscoverPage({ onShowToast }) {
       const matchesRating = Number(talent.rating) >= Number(minRating);
 
       const matchesAvailability =
-        !showOnlyAvailable || talent.availability.toLowerCase().includes('available');
+        !showOnlyAvailable || (talent.availability || '').toLowerCase().includes('available');
 
       return matchesQuery && matchesCategory && matchesLocation && matchesRating && matchesAvailability;
     });
@@ -69,13 +80,13 @@ export default function DiscoverPage({ onShowToast }) {
       case 'top-rated':
         return [...results].sort((a, b) => b.rating - a.rating);
       case 'low-price':
-        return [...results].sort((a, b) => Number.parseInt(a.price.replace(/[^\d]/g, '')) - Number.parseInt(b.price.replace(/[^\d]/g, '')));
+        return [...results].sort((a, b) => Number.parseInt(a.price || '0', 10) - Number.parseInt(b.price || '0', 10));
       case 'most-reviewed':
         return [...results].sort((a, b) => b.reviews - a.reviews);
       default:
         return results;
     }
-  }, [query, selectedCategory, selectedProvince, minRating, sortBy, showOnlyAvailable]);
+  }, [profiles, query, selectedCategory, selectedProvince, minRating, sortBy, showOnlyAvailable]);
 
   const totalPages = Math.max(1, Math.ceil(filteredTalent.length / pageSize));
   const paginatedTalent = filteredTalent.slice(
@@ -97,15 +108,15 @@ export default function DiscoverPage({ onShowToast }) {
         <section className="filter-panel">
           <div className="discover-summary">
             <div className="summary-pill">
-              <strong>{discoverTalent.length}</strong>
+              <strong>{profiles.length}</strong>
               <span>Profiles</span>
             </div>
             <div className="summary-pill">
-              <strong>{new Set(discoverTalent.map((talent) => talent.location)).size}</strong>
+              <strong>{new Set(profiles.map((talent) => talent.location)).size}</strong>
               <span>Locations</span>
             </div>
             <div className="summary-pill">
-              <strong>4.8</strong>
+              <strong>{profiles.length ? (profiles.reduce((total, profile) => total + Number(profile.rating || 0), 0) / profiles.length).toFixed(1) : '0.0'}</strong>
               <span>Average rating</span>
             </div>
           </div>
@@ -195,7 +206,7 @@ export default function DiscoverPage({ onShowToast }) {
           ))}
         </div>
 
-        {filteredTalent.length === 0 ? (
+        {loading ? <div className="empty-state"><p>Loading profiles...</p></div> : error ? <div className="empty-state"><h3>Profiles are unavailable</h3><p>{error}</p></div> : filteredTalent.length === 0 ? (
           <div className="empty-state">
             <h3>No matches found</h3>
             <p>Try another keyword, location or availability filter.</p>

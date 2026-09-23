@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/common/Button';
+import { supabase } from '../../lib/supabase';
 
 export default function RegisterPage({ onShowToast }) {
   const navigate = useNavigate();
@@ -10,14 +11,28 @@ export default function RegisterPage({ onShowToast }) {
     category: 'Photographer',
     password: '',
   });
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setError('');
+    setSubmitting(true);
+    const { error: authError } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.password,
+      options: { data: { name: form.name, category: form.category, role: 'SELLER' } },
+    });
+    setSubmitting(false);
+    if (authError) {
+      setError(authError.message);
+      return;
+    }
     onShowToast?.('Your profile is ready. Welcome to ZAM TALENT TOP.');
     navigate('/dashboard');
   };
@@ -89,9 +104,10 @@ export default function RegisterPage({ onShowToast }) {
             <span>I agree to the terms and consent to receiving account updates.</span>
           </label>
 
-          <Button type="submit" className="full-width">Create account</Button>
+          {error ? <p role="alert" className="form-error">{error}</p> : null}
+          <Button type="submit" className="full-width" disabled={submitting}>{submitting ? 'Creating account...' : 'Create account'}</Button>
           <p className="muted-copy">
-            Already have an account? <a href="/login" className="link-text">Login</a>
+            Already have an account? <Link to="/login" className="link-text">Login</Link>
           </p>
         </form>
       </div>

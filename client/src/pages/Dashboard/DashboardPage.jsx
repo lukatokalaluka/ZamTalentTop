@@ -1,4 +1,5 @@
 import Button from '../../components/common/Button';
+import { useAuth } from '../../context/AuthContext';
 
 const stats = [
   { label: 'Profile views', value: '2,843', trend: '+18%' },
@@ -28,13 +29,14 @@ const trustSignals = [
 ];
 
 export default function DashboardPage() {
+  const { profile } = useAuth();
   return (
     <div className="page-shell">
       <div className="container">
         <div className="page-header dashboard-header">
           <div>
             <span className="eyebrow">Dashboard</span>
-            <h1>Welcome back, John.</h1>
+            <h1>Welcome back, {profile?.name || 'there'}.</h1>
           </div>
           <div className="dashboard-actions">
             <Button variant="secondary">Update profile</Button>
@@ -76,7 +78,7 @@ export default function DashboardPage() {
         <section className="info-panel bookings-panel">
           <div className="panel-headline">
             <h2>Upcoming bookings</h2>
-            <a href="#" className="link-text">View all</a>
+            <button type="button" className="link-text link-button">View all</button>
           </div>
           <div className="booking-list">
             {bookings.map((booking) => (

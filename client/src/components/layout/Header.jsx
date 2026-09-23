@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import Button from '../common/Button';
+import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
   { label: 'Home', to: '/' },
@@ -12,6 +13,7 @@ const navItems = [
 
 export default function Header({ theme, onToggleTheme, onShowToast }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const toggleMenu = () => setMobileMenuOpen((prev) => !prev);
 
@@ -45,21 +47,8 @@ export default function Header({ theme, onToggleTheme, onShowToast }) {
             {theme === 'light' ? '☾' : '☀'}
           </button>
 
-          <Button
-            to="/login"
-            variant="ghost"
-            className="hide-mobile"
-            onClick={() => onShowToast?.('Welcome back to ZAM TALENT TOP')}
-          >
-            Login
-          </Button>
-
-          <Button
-            to="/register"
-            onClick={() => onShowToast?.('Create your free talent profile')}
-          >
-            Join now
-          </Button>
+          {user ? <Button variant="ghost" className="hide-mobile" onClick={signOut}>Logout</Button> : <Button to="/login" variant="ghost" className="hide-mobile" onClick={() => onShowToast?.('Welcome back to ZAM TALENT TOP')}>Login</Button>}
+          {!user ? <Button to="/register" onClick={() => onShowToast?.('Create your free talent profile')}>Join now</Button> : null}
 
           <button
             type="button"

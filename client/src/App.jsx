@@ -13,6 +13,8 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import BookingPage from './pages/Booking/BookingPage';
 import NotFoundPage from './pages/NotFound/NotFoundPage';
 import './App.css';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -42,8 +44,10 @@ function AppLayout({ theme, onToggleTheme, onShowToast }) {
           <Route path="/marketplace" element={<MarketplacePage />} />
           <Route path="/login" element={<LoginPage onShowToast={onShowToast} />} />
           <Route path="/register" element={<RegisterPage onShowToast={onShowToast} />} />
-          <Route path="/dashboard" element={<DashboardPage onShowToast={onShowToast} />} />
-          <Route path="/booking/:slug" element={<BookingPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<DashboardPage onShowToast={onShowToast} />} />
+            <Route path="/booking/:slug" element={<BookingPage onShowToast={onShowToast} />} />
+          </Route>
           <Route path="/talent/:slug" element={<ProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
@@ -77,15 +81,17 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <AppLayout
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
-        onShowToast={handleShowToast}
-      />
-      <Toast message={toast} />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <AppLayout
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
+          onShowToast={handleShowToast}
+        />
+        <Toast message={toast} />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
