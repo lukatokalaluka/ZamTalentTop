@@ -266,7 +266,7 @@ export default function ProfilePage() {
                 <ul className="detail-list">
                   <li>WhatsApp: {profile.socialLinks?.whatsapp || '+260 763 464 067'}</li>
                   <li>Call: {profile.socialLinks?.phone || '+260 972 941 849'}</li>
-                  <li>Email: {profile.socialLinks?.email || `hello@${profile.slug}.studio`}</li>
+                  <li>Email: {profile.socialLinks?.email || 'lukatokalaluka@gmail.com'}</li>
                   <li>Instagram: {profile.socialLinks?.instagram || `@${profile.slug}`}</li>
                 </ul>
               </section>
