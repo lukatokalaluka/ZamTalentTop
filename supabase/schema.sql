@@ -34,6 +34,7 @@ alter table public.profiles add column if not exists town text not null default 
 alter table public.profiles add column if not exists latitude double precision;
 alter table public.profiles add column if not exists longitude double precision;
 alter table public.profiles add column if not exists avatar_url text not null default '';
+alter table public.profiles add column if not exists portfolio_media jsonb not null default '[]'::jsonb;
 
 update public.profiles
 set legal_name = coalesce(nullif(legal_name, ''), name),
@@ -54,8 +55,27 @@ create table if not exists public.bookings (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.marketplace_products (
+  id uuid primary key default gen_random_uuid(),
+  seller_id uuid not null references auth.users(id) on delete cascade,
+  name text not null,
+  description text not null default '',
+  category text not null default 'Sample pack / beat',
+  price_minor integer not null default 0,
+  image_url text not null default '',
+  preview_url text not null default '',
+  media_type text not null default 'audio',
+  status text not null default 'PUBLISHED',
+  created_at timestamptz not null default now()
+);
+
+alter table public.marketplace_products add column if not exists preview_url text not null default '';
+alter table public.marketplace_products add column if not exists media_type text not null default 'audio';
+alter table public.marketplace_products add column if not exists seller_id uuid references auth.users(id) on delete cascade;
+
 alter table public.profiles enable row level security;
 alter table public.bookings enable row level security;
+alter table public.marketplace_products enable row level security;
 
 drop policy if exists "Active profiles are public" on public.profiles;
 create policy "Active profiles are public" on public.profiles
@@ -76,6 +96,16 @@ create policy "Authenticated users create bookings" on public.bookings
 grant select on public.profiles to anon, authenticated;
 grant insert, update, delete on public.profiles to authenticated;
 grant select, insert on public.bookings to authenticated;
+grant select on public.marketplace_products to anon, authenticated;
+grant insert, update, delete on public.marketplace_products to authenticated;
+
+drop policy if exists "Published products are public" on public.marketplace_products;
+create policy "Published products are public" on public.marketplace_products
+  for select using (status = 'PUBLISHED' or auth.uid() = seller_id);
+
+drop policy if exists "Sellers manage products" on public.marketplace_products;
+create policy "Sellers manage products" on public.marketplace_products
+  for all to authenticated using (auth.uid() = seller_id) with check (auth.uid() = seller_id);
 
 insert into storage.buckets (id, name, public)
 values ('avatars', 'avatars', true)
@@ -95,3 +125,16 @@ create policy "Users update their avatar" on storage.objects
   for update to authenticated
   using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text)
   with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+insert into storage.buckets (id, name, public)
+values ('creator-media', 'creator-media', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "Public creator media is readable" on storage.objects;
+create policy "Public creator media is readable" on storage.objects
+  for select using (bucket_id = 'creator-media');
+
+drop policy if exists "Creators upload media" on storage.objects;
+create policy "Creators upload media" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'creator-media' and (storage.foldername(name))[1] = auth.uid()::text);

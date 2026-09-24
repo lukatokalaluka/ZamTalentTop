@@ -26,6 +26,10 @@ with the policies required by the client dashboard and public directory. It also
 creates the public `avatars` Storage bucket; keep the bucket policies from the
 script so users can only upload inside their own user folder.
 
+The same script creates the `creator-media` bucket and marketplace preview fields.
+Creators can upload gallery images/audio/video and publish sample pack or beat
+previews from the dashboard. Customers can play public previews before purchase.
+
 The public tables used by the client are `profiles`, `bookings`, and
 `marketplace_products`. Enable Row Level Security and define policies before
 deploying. The browser must only receive the publishable key; never expose a

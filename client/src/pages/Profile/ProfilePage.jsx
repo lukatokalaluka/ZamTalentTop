@@ -65,7 +65,7 @@ export default function ProfilePage() {
   useEffect(() => {
     getProfile(slug).then(({ profile: nextProfile }) => setProfile(nextProfile)).catch((requestError) => setError(requestError.message));
   }, [slug]);
-  const portfolioMedia = useMemo(() => (profile?.portfolioMedia || profile?.portfolioImages || []).map(normalizeMedia).filter((media) => isSafeExternalUrl(media.url)), [profile]);
+  const portfolioMedia = useMemo(() => (profile?.portfolioMedia || profile?.portfolio_media || profile?.portfolioImages || []).map(normalizeMedia).filter((media) => isSafeExternalUrl(media.url)), [profile]);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [shareMessage, setShareMessage] = useState('');
 

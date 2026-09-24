@@ -1739,6 +1739,20 @@
   margin: 0;
 }
 
+.media-upload-panels {
+  margin-top: 20px;
+}
+
+.media-upload-panels .dashboard-editor {
+  margin-top: 0;
+}
+
+.product-preview-audio,
+.product-preview-video {
+  width: 100%;
+  margin: 12px 0;
+}
+
 .avatar-editor {
   display: flex;
   align-items: center;

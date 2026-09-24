@@ -3,7 +3,7 @@ import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Button from '../../components/common/Button';
 import { useAuth } from '../../context/AuthContext';
-import { getUserBookings, saveProfile, uploadAvatar } from '../../services/api';
+import { createMarketplaceProduct, getUserBookings, saveProfile, uploadAvatar, uploadMedia } from '../../services/api';
 
 const defaultCenter = [-13.9626, 28.3228];
 const provinces = [
@@ -38,6 +38,8 @@ export default function DashboardPage({ onShowToast }) {
   const [error, setError] = useState('');
   const [profileForm, setProfileForm] = useState({});
   const [serviceForm, setServiceForm] = useState({ name: '', price: '' });
+  const [mediaForm, setMediaForm] = useState({ title: '', description: '', file: null });
+  const [packForm, setPackForm] = useState({ name: '', description: '', price: '', file: null });
 
   useEffect(() => {
     if (!user) return undefined;
@@ -114,6 +116,34 @@ export default function DashboardPage({ onShowToast }) {
     }
   };
 
+  const handlePortfolioUpload = async (event) => {
+    event.preventDefault();
+    if (!mediaForm.file) return;
+    setSaving(true);
+    setError('');
+    try {
+      const url = await uploadMedia(user.id, mediaForm.file);
+      const type = mediaForm.file.type.startsWith('image/') ? 'image' : mediaForm.file.type.startsWith('audio/') ? 'audio' : 'video';
+      await saveProfile(user.id, { portfolio_media: [...(profile?.portfolio_media || profile?.portfolioMedia || []), { id: crypto.randomUUID(), type, url, title: mediaForm.title || mediaForm.file.name, description: mediaForm.description, access: 'public' }] });
+      setMediaForm({ title: '', description: '', file: null });
+      onShowToast?.('Gallery media uploaded.');
+      window.location.reload();
+    } catch (requestError) { setError(requestError.message); } finally { setSaving(false); }
+  };
+
+  const handlePackUpload = async (event) => {
+    event.preventDefault();
+    if (!packForm.file || !packForm.name.trim()) return;
+    setSaving(true);
+    setError('');
+    try {
+      const previewUrl = await uploadMedia(user.id, packForm.file, 'previews');
+      await createMarketplaceProduct({ seller_id: user.id, name: packForm.name.trim(), description: packForm.description, category: 'Sample pack / beat', price_minor: Math.round(Number(packForm.price || 0) * 100), preview_url: previewUrl, media_type: packForm.file.type.startsWith('audio/') ? 'audio' : 'video', status: 'PUBLISHED' });
+      setPackForm({ name: '', description: '', price: '', file: null });
+      onShowToast?.('Sample pack or beat published with a preview.');
+    } catch (requestError) { setError(requestError.message); } finally { setSaving(false); }
+  };
+
   const profileComplete = ['legal_name', 'phone', 'province', 'town', 'bio'].filter((field) => profile?.[field]).length;
   const stats = [
     { label: 'Profile status', value: profile?.status || 'DRAFT', detail: 'Synced with Supabase' },
@@ -136,6 +166,7 @@ export default function DashboardPage({ onShowToast }) {
         <Button type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save profile'}</Button>
       </form> : null}
       {showServiceForm ? <form className="info-panel dashboard-editor" onSubmit={handleServiceSave}><h2>Add a service</h2><div className="booking-form__grid"><label><span>Service name</span><input value={serviceForm.name} onChange={(event) => setServiceForm({ ...serviceForm, name: event.target.value })} required /></label><label><span>Starting price</span><input value={serviceForm.price} onChange={(event) => setServiceForm({ ...serviceForm, price: event.target.value })} placeholder="K2,500" /></label></div><Button type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save service'}</Button></form> : null}
+      <div className="dashboard-panels media-upload-panels"><form className="info-panel dashboard-editor" onSubmit={handlePortfolioUpload}><h2>Creator gallery</h2><p className="muted-copy muted-copy--left">Upload images, audio, or video for your public advertising gallery.</p><input type="text" placeholder="Media title" value={mediaForm.title} onChange={(event) => setMediaForm({ ...mediaForm, title: event.target.value })} /><textarea rows="3" placeholder="Short description" value={mediaForm.description} onChange={(event) => setMediaForm({ ...mediaForm, description: event.target.value })} /><input type="file" accept="image/*,audio/*,video/*" onChange={(event) => setMediaForm({ ...mediaForm, file: event.target.files?.[0] || null })} required /><Button type="submit" disabled={saving}>{saving ? 'Uploading...' : 'Add to gallery'}</Button></form><form className="info-panel dashboard-editor" onSubmit={handlePackUpload}><h2>Sample packs and beats</h2><p className="muted-copy muted-copy--left">Publish an audio preview so clients can listen before buying.</p><input type="text" placeholder="Pack or beat name" value={packForm.name} onChange={(event) => setPackForm({ ...packForm, name: event.target.value })} required /><textarea rows="3" placeholder="Description" value={packForm.description} onChange={(event) => setPackForm({ ...packForm, description: event.target.value })} /><input type="number" min="0" step="0.01" placeholder="Price in K" value={packForm.price} onChange={(event) => setPackForm({ ...packForm, price: event.target.value })} /><input type="file" accept="audio/*,video/*" onChange={(event) => setPackForm({ ...packForm, file: event.target.files?.[0] || null })} required /><Button type="submit" disabled={saving}>{saving ? 'Publishing...' : 'Publish preview'}</Button></form></div>
       <div className="dashboard-grid">{stats.map((stat) => <div key={stat.label} className="overview-box"><span>{stat.label}</span><strong>{stat.value}</strong><small>{stat.detail}</small></div>)}</div>
       <div className="dashboard-panels"><section className="info-panel"><h2>Profile checklist</h2><ul className="detail-list"><li>{profile?.legal_name ? 'Legal name added' : 'Add your legal name'}</li><li>{profile?.phone ? 'Phone number added' : 'Add a valid phone number'}</li><li>{profile?.province && profile?.town ? 'Location added' : 'Add province and town'}</li><li>{profile?.avatar_url || profile?.image_url ? 'Avatar added' : 'Add an avatar'}</li></ul></section><section className="info-panel"><h2>Your services</h2>{profile?.services?.length ? <ul className="detail-list service-list">{profile.services.map((service) => <li key={service.name}><span>{service.name}</span><strong>{service.price}</strong></li>)}</ul> : <p className="muted-copy muted-copy--left">No services yet. Add one to make your profile useful to clients.</p>}</section></div>
       <section className="info-panel bookings-panel"><div className="panel-headline"><h2>Bookings linked to your account</h2><span className="media-count">{bookings.length}</span></div>{bookings.length ? <div className="booking-list">{bookings.map((booking) => <div key={booking.id} className="booking-card"><div><h3>{booking.service_name || 'Service request'}</h3><p>{formatBookingDate(booking.date)} · {booking.status || 'PENDING'}</p></div><strong>{booking.total_minor ? `K${(booking.total_minor / 100).toLocaleString()}` : 'Quote pending'}</strong></div>)}</div> : <div className="empty-state"><p>No booking requests yet.</p></div>}</section>

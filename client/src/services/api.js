@@ -4,7 +4,7 @@ function throwOnError(error) {
   if (error) throw new Error(error.message || 'The request could not be completed.');
 }
 
-const publicProfileColumns = 'id,user_id,slug,name,display_name,title,category,bio,location,province,town,latitude,longitude,image_url,avatar_url,cover_url,skills,services,social_links,status,availability,price,rating,reviews,created_at,updated_at';
+const publicProfileColumns = 'id,user_id,slug,name,display_name,title,category,bio,location,province,town,latitude,longitude,image_url,avatar_url,cover_url,skills,services,portfolio_media,social_links,status,availability,price,rating,reviews,created_at,updated_at';
 
 function normalizeProfile(profile) {
   if (!profile) return null;
@@ -75,6 +75,19 @@ export async function uploadAvatar(userId, file) {
   throwOnError(uploadError);
   const { data } = supabase.storage.from('avatars').getPublicUrl(path);
   return data.publicUrl;
+}
+
+export async function uploadMedia(userId, file, folder = 'portfolio') {
+  const path = `${userId}/${folder}/${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, '-')}`;
+  const { error } = await supabase.storage.from('creator-media').upload(path, file, { cacheControl: '3600', upsert: false });
+  throwOnError(error);
+  return supabase.storage.from('creator-media').getPublicUrl(path).data.publicUrl;
+}
+
+export async function createMarketplaceProduct(product) {
+  const { data, error } = await supabase.from('marketplace_products').insert(product).select().single();
+  throwOnError(error);
+  return { product: data };
 }
 
 export async function getUserBookings(userId) {
