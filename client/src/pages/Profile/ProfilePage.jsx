@@ -133,7 +133,9 @@ export default function ProfilePage() {
     }
   };
 
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`View ${profile.name} on Zam Talent Top: ${profileUrl}`)}`;
+  const whatsappNumber = (profile.socialLinks?.whatsapp || '+260 763 464 067').replace(/\D/g, '');
+  const whatsappMessage = `Hi ${profile.name}, I found your profile on Zam Talent Top and would like to discuss your services: ${profileUrl}`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <div className="page-shell">
@@ -158,7 +160,7 @@ export default function ProfilePage() {
                 <Button variant="secondary" to={`/booking/${profile.slug}`}>Request service</Button>
                 <Button variant="ghost" to={`/booking/${profile.slug}`}>Book now</Button>
                 <button type="button" className="share-button" onClick={handleShare}>Share profile</button>
-                <a className="share-button" href={whatsappUrl} target="_blank" rel="noreferrer">Share on WhatsApp</a>
+                <a className="share-button" href={whatsappUrl} target="_blank" rel="noreferrer">Chat on WhatsApp</a>
               </div>
               {shareMessage ? <p className="share-message" role="status">{shareMessage}</p> : null}
             </div>
@@ -264,7 +266,7 @@ export default function ProfilePage() {
               <section className="info-panel">
                 <h2>Contact</h2>
                 <ul className="detail-list">
-                  <li>WhatsApp: {profile.socialLinks?.whatsapp || '+260 763 464 067'}</li>
+                  <li>WhatsApp: <a className="link-text" href={whatsappUrl} target="_blank" rel="noreferrer">{profile.socialLinks?.whatsapp || '+260 763 464 067'}</a></li>
                   <li>Call: {profile.socialLinks?.phone || '+260 972 941 849'}</li>
                   <li>Email: {profile.socialLinks?.email || 'lukatokalaluka@gmail.com'}</li>
                   <li>Instagram: {profile.socialLinks?.instagram || `@${profile.slug}`}</li>
